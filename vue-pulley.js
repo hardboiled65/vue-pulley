@@ -41,6 +41,7 @@
                     draggingPhantomDelay: 1000,
                     preventParentScroll: false,
                     useScrollbarPseudo: false, // experimental
+                    autoHideScrollbar: true,
 
                     el1Class: 'vb',
                     el1ScrollVisibleClass: 'vb-visible',
@@ -192,6 +193,9 @@
             dragger.style.zIndex = '15';
             dragger.style.width = '10px';
             dragger.style.right = '0';
+            dragger.style.padding = '2px 0 2px 2px';
+            dragger.style.opacity = '0';
+            dragger.style.transition = 'opacity 100ms ease-out';
 
             if (!state.draggerEnabled) {
                 dragger.style.display = 'none';
@@ -200,13 +204,13 @@
             draggerStyler.className = state.config.draggerStylerClass;
 
             // Additional styles for dragger styler.
-            draggerStyler.style.backfaceVisibility = 'hidden'
-            draggerStyler.style.backgroundColor = 'rgba(23, 23, 23, .5)'
-            draggerStyler.style.margin = '0'
-            draggerStyler.style.borderRadius = '20px'
-            draggerStyler.style.display = 'block'
-            draggerStyler.style.width = '8px'
-            draggerStyler.style.height = '100%'
+            draggerStyler.style.backfaceVisibility = 'hidden';
+            draggerStyler.style.backgroundColor = 'rgba(0, 0, 0, .5)';
+            draggerStyler.style.margin = '0';
+            draggerStyler.style.borderRadius = '20px';
+            draggerStyler.style.display = 'block';
+            draggerStyler.style.width = '6px';
+            draggerStyler.style.height = '100%';
 
             dragger.appendChild(draggerStyler);
             state.el1.appendChild(dragger);
@@ -389,8 +393,16 @@
 
 
         function wheelHandler(el){
+            var state = getState(el);
             return function(event){
-                preventParentScroll(el, event);
+                console.log('wheelHandler');
+                state.dragger.style.opacity = '1';
+                setTimeout(function() {
+                    state.dragger.style.opacity = '0';
+                }, 2000);
+                if (state.preventParentScroll) {
+                    preventParentScroll(el, event);
+                }
             }.bind(this);
         }
 
@@ -588,7 +600,9 @@
             // - resize event is only needed when resizeRefresh option is enabled
             state.el2.addEventListener('scroll', state.scrollHandler, 0);
             state.dragger.addEventListener('mousedown', state.barMousedown, 0);
-            state.config.preventParentScroll ? state.el2.addEventListener('wheel', state.wheelHandler, 0) : null;
+            state.config.preventParentScroll || state.config.autoHideScrollbar
+                ? state.el2.addEventListener('wheel', state.wheelHandler, 0)
+                : null;
             state.config.resizeRefresh ? window.addEventListener('resize', state.windowResize, 0) : null;
 
             // initial calculations using refresh scrollbar
