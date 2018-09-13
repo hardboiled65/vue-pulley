@@ -37,8 +37,8 @@
                     resizeDebounce: 100,
                     unselectableBody: true,
                     overrideFloatingScrollbar: true,
-                    scrollingPhantomDelay: 1000,
-                    draggingPhantomDelay: 1000,
+                    scrollingPhantomDelay: 500,
+                    draggingPhantomDelay: 500,
                     preventParentScroll: false,
                     useScrollbarPseudo: false, // experimental
                     autoHideScrollbar: true,
@@ -195,7 +195,8 @@
             dragger.style.right = '0';
             dragger.style.padding = '2px 0 2px 2px';
             dragger.style.opacity = '0';
-            dragger.style.transition = 'opacity 100ms ease-out';
+            dragger.style.visibility = 'hidden';
+            dragger.style.transition = 'opacity 200ms ease-out, visibility 300ms linear';
 
             if (!state.draggerEnabled) {
                 dragger.style.display = 'none';
@@ -255,17 +256,18 @@
 
 
                 // add phantom scrolling class
+                autoHideScrollbar(el, { forceShow: true });
                 addClass(state.el1, state.config.el1ScrollingPhantomClass);
 
                 // remove phantom scrolling class
                 state.scrollingPhantomClassTimeout ?
                     clearTimeout(state.scrollingPhantomClassTimeout) : null;
                 state.scrollingPhantomClassTimeout = setTimeout(function() {
+                    autoHideScrollbar(el);
                     removeClass(state.el1, state.config.el1ScrollingPhantomClass);
                 }, state.config.scrollThrottle + state.config.scrollingPhantomDelay);
 
             }
-
         }
 
 
@@ -347,6 +349,20 @@
         }
 
 
+        function autoHideScrollbar(el, options){
+            var options = options || {};
+            var state = getState(el);
+            if (options.forceShow ||
+                    (!hasClass(el, state.config.el1ScrollingPhantomClass) &&
+                    !hasClass(el, state.config.el1DraggingPhantomClass))) {
+                state.dragger.style.visibility = 'visible';
+                state.dragger.style.opacity = '1';
+            } else {
+                state.dragger.style.visibility = 'hidden';
+                state.dragger.style.opacity = '0';
+            }
+        }
+
 
 
         /*------------------------------------*\
@@ -395,12 +411,7 @@
         function wheelHandler(el){
             var state = getState(el);
             return function(event){
-                console.log('wheelHandler');
-                state.dragger.style.opacity = '1';
-                setTimeout(function() {
-                    state.dragger.style.opacity = '0';
-                }, 2000);
-                if (state.preventParentScroll) {
+                if (state.config.preventParentScroll) {
                     preventParentScroll(el, event);
                 }
             }.bind(this);
@@ -432,6 +443,7 @@
                 // remove dragging class
                 removeClass(state.el1, state.config.el1DraggingClass);
                 state.draggingPhantomClassTimeout = setTimeout(function() {
+                    autoHideScrollbar(el);
                     removeClass(state.el1, state.config.el1DraggingPhantomClass);
                 }, state.config.draggingPhantomDelay);
 
@@ -459,10 +471,18 @@
                 state.el1.style.userSelect = 'none';
                 state.config.unselectableBody ? compatStyle(document.body, 'UserSelect', 'none') : null;
 
+                // reset scrolling phantom class
+                state.scrollingPhantomClassTimeout ?
+                    clearTimeout(state.scrollingPhantomClassTimeout) : null;
+                state.scrollingPhantomClassTimeout = setTimeout(function() {
+                    removeClass(state.el1, state.config.el1ScrollingClass);
+                }, state.config.scrollingPhantomDelay);
+
                 // add dragging class
                 addClass(state.el1, state.config.el1DraggingClass);
                 state.draggingPhantomClassTimeout ?
                     clearTimeout(state.draggingPhantomClassTimeout) : null;
+                autoHideScrollbar(el, { forceShow: true });
                 addClass(state.el1, state.config.el1DraggingPhantomClass);
 
                 // add events
@@ -600,9 +620,7 @@
             // - resize event is only needed when resizeRefresh option is enabled
             state.el2.addEventListener('scroll', state.scrollHandler, 0);
             state.dragger.addEventListener('mousedown', state.barMousedown, 0);
-            state.config.preventParentScroll || state.config.autoHideScrollbar
-                ? state.el2.addEventListener('wheel', state.wheelHandler, 0)
-                : null;
+            state.config.preventParentScroll ? state.el2.addEventListener('wheel', state.wheelHandler, 0) : null;
             state.config.resizeRefresh ? window.addEventListener('resize', state.windowResize, 0) : null;
 
             // initial calculations using refresh scrollbar
