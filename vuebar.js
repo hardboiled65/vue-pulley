@@ -9,15 +9,15 @@
     /*------------------------------------*\
         Vuebar
     \*------------------------------------*/
-    var Vuebar = {};
-    Vuebar.install = function(Vue, installOptions){
+    var VuePulley = {};
+    VuePulley.install = function(Vue, installOptions){
 
 
         /*------------------------------------*\
             Custom Directive Name
         \*------------------------------------*/
         installOptions = installOptions || {};
-        installOptions.directive = installOptions.directive || 'bar';
+        installOptions.directive = installOptions.directive || 'pulley';
 
 
         /*------------------------------------*\
@@ -29,6 +29,7 @@
 
                 // config with default values that may be overwritten on directive intialization
                 config: {
+                    theme: 'apple',
                     scrollThrottle: 10,
                     draggerThrottle: 10,
                     resizeRefresh: true,
@@ -187,11 +188,25 @@
 
             dragger.style.position = 'absolute';
 
+            // Additional styles for dragger.
+            dragger.style.zIndex = '15';
+            dragger.style.width = '10px';
+            dragger.style.right = '0';
+
             if (!state.draggerEnabled) {
                 dragger.style.display = 'none';
             }
 
             draggerStyler.className = state.config.draggerStylerClass;
+
+            // Additional styles for dragger styler.
+            draggerStyler.style.backfaceVisibility = 'hidden'
+            draggerStyler.style.backgroundColor = 'rgba(23, 23, 23, .5)'
+            draggerStyler.style.margin = '0'
+            draggerStyler.style.borderRadius = '20px'
+            draggerStyler.style.display = 'block'
+            draggerStyler.style.width = '8px'
+            draggerStyler.style.height = '100%'
 
             dragger.appendChild(draggerStyler);
             state.el1.appendChild(dragger);
@@ -876,15 +891,15 @@
         Expose / Autoinstall
     \*------------------------------------*/
     if (typeof exports === 'object' && typeof module === 'object') {
-        module.exports = Vuebar;
+        module.exports = VuePulley;
     } else if (typeof define === 'function' && define.amd) {
-        define(function () { return Vuebar });
+        define(function () { return VuePulley });
     } else if (typeof window !== typeof void 0) {
-        window.Vuebar = Vuebar;
+        window.VuePulley = VuePulley;
     }
 
     if (typeof Vue !== typeof void 0) {
-        Vue.use(Vuebar);
+        Vue.use(VuePulley);
     }
 
 

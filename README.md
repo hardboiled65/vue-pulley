@@ -1,24 +1,16 @@
-# Vuebar
+# vue-pulley
 
-Vue 2 directive for custom scrollbar that uses native scroll behavior. Lightweight, performant, customizable and without dependencies. Used successfully in production on [GGather.com](https://ggather.com/).
+Vue 2 directive for custom scrollbar that mimics macOS scrollbar.
+Forked from [Vuebar](https://github.com/DominikSerafin/vuebar)
 
 
-## Official Website (Docs & Examples)
-
+## Original Author
+[@DominikSerafin](https://github.com/DominikSerafin)
 [Go to github.serafin.io/vuebar](http://github.serafin.io/vuebar/)
-
-
-## Acknowledgements
-
-[Used successfully in production on GGather.com](https://ggather.com/)
-
-[Tested with the help of Browserstack](https://browserstack.com/)
 
 
 ## Links
 
-[GitHub](https://github.com/DominikSerafin/vuebar)
+[GitHub](https://github.com/hardboiled65/vue-pulley)
 
-[NPM](https://www.npmjs.com/package/vuebar)
-
-[Serafin.io (Author)](https://serafin.io/)
+[Serafin.io (Original Author)](https://serafin.io/)

@@ -1,15 +1,15 @@
 {
-  "name": "vuebar",
-  "description": "Vue directive for custom scrollbar that uses native scroll behavior. Lightweight, performant and without dependencies.",
+  "name": "vue-pulley",
+  "description": "Vue 2 directive for custom scrollbar that mimics macOS scrollbar. Forked from [Vuebar](https://github.com/DominikSerafin/vuebar)",
   "author": "Dominik Serafin <dominikdsgnr@gmail.com>",
   "license": "MIT",
-  "version": "0.0.20",
+  "version": "0.0.1",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git@github.com:DominikSerafin/vuebar.git"
+    "url": "git@github.com:hardboiled65/vue-pulley.git"
   },
-  "homepage": "https://github.com/DominikSerafin/vuebar",
+  "homepage": "https://github.com/hardboiled65/vue-pulley",
   "keywords": [
     "vue",
     "vue2",
@@ -18,7 +18,7 @@
     "scrollbar",
     "native"
   ],
-  "main": "vuebar.js",
+  "main": "vue-pulley.js",
   "scripts": {
     "dev": "webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
