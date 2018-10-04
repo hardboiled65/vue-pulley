@@ -37,8 +37,8 @@
                     resizeDebounce: 100,
                     unselectableBody: true,
                     overrideFloatingScrollbar: true,
-                    scrollingPhantomDelay: 500,
-                    draggingPhantomDelay: 500,
+                    scrollingPhantomDelay: 700,
+                    draggingPhantomDelay: 700,
                     preventParentScroll: false,
                     useScrollbarPseudo: false, // experimental
                     autoHideScrollbar: true,
@@ -75,6 +75,7 @@
                 barHeight: 0, // height of dragger in px
                 mouseBarOffsetY: 0, // relative position of mouse at the time of clicking on dragger
                 barDragging: false, // when the dragger is used
+                trackZoomed: false,
 
                 // reference to MutationObserver
                 mutationObserver: null,
@@ -92,6 +93,7 @@
                 windowResize: null,
                 scrollHandler: null,
                 wheelHandler: null,
+                trackMouseenter: null,
 
             };
             return el._vuebarState;
@@ -191,12 +193,13 @@
 
             // Additional styles for dragger.
             dragger.style.zIndex = '15';
-            dragger.style.width = '10px';
+            dragger.style.width = '11px';
             dragger.style.right = '0';
-            dragger.style.padding = '2px 0 2px 2px';
+            dragger.style.padding = '2px';
+            dragger.style.boxSizing = 'border-box';
             dragger.style.opacity = '0';
             dragger.style.visibility = 'hidden';
-            dragger.style.transition = 'opacity 200ms ease-out, visibility 300ms linear';
+            dragger.style.transition = 'opacity 200ms ease-out, visibility 300ms linear, width 100ms linear';
 
             if (!state.draggerEnabled) {
                 dragger.style.display = 'none';
@@ -210,7 +213,7 @@
             draggerStyler.style.margin = '0';
             draggerStyler.style.borderRadius = '20px';
             draggerStyler.style.display = 'block';
-            draggerStyler.style.width = '6px';
+            draggerStyler.style.width = '100%';
             draggerStyler.style.height = '100%';
 
             dragger.appendChild(draggerStyler);
@@ -360,6 +363,7 @@
             } else {
                 state.dragger.style.visibility = 'hidden';
                 state.dragger.style.opacity = '0';
+                state.dragger.style.width = '11px';
             }
         }
 
@@ -494,6 +498,34 @@
         }
 
 
+        function trackMouseenter(el) {
+            var state = getState(el);
+            return function(event) {
+                state.trackZoomed = true;
+                state.dragger.style.width = '15px';
+
+                // reset phantom class
+                state.scrollingPhantomClassTimeout ?
+                    clearTimeout(state.scrollingPhantomClassTimeout) : null;
+                state.scrollingPhantomClassTimeout = setTimeout(function() {
+                    removeClass(state.el1, state.config.el1ScrollingClass);
+                }, state.config.scrollingPhantomDelay);
+
+                state.draggingPhantomClassTimeout ?
+                    clearTimeout(state.draggingPhantomClassTimeout) : null;
+                state.draggingPhantomClassTimeout = setTimeout(function() {
+                    autoHideScrollbar(el);
+                    removeClass(state.el1, state.config.el1DraggingClass);
+                }, state.config.draggingPhantomDelay);
+
+                // add dragging class
+                addClass(state.el1, state.config.el1DraggingClass);
+                autoHideScrollbar(el, { forceShow: true });
+                addClass(state.el1, state.config.el1DraggingPhantomClass);
+            }
+        }
+
+
         function windowResize(el){
             var state = getState(el);
             return debounce(function(event){
@@ -574,6 +606,7 @@
             state.windowResize = windowResize(el);
             state.scrollHandler = scrollHandler(el);
             state.wheelHandler = wheelHandler(el);
+            state.trackMouseenter = trackMouseenter(el);
 
             // initialize and reference mutation observer
             state.mutationObserver = initMutationObserver(el);
@@ -620,6 +653,7 @@
             // - resize event is only needed when resizeRefresh option is enabled
             state.el2.addEventListener('scroll', state.scrollHandler, 0);
             state.dragger.addEventListener('mousedown', state.barMousedown, 0);
+            state.dragger.addEventListener('mouseenter', state.trackMouseenter, 0);
             state.config.preventParentScroll ? state.el2.addEventListener('wheel', state.wheelHandler, 0) : null;
             state.config.resizeRefresh ? window.addEventListener('resize', state.windowResize, 0) : null;
 
@@ -641,6 +675,7 @@
 
             // clear events
             state.dragger.removeEventListener('mousedown', state.barMousedown, 0);
+            state.dragger.removeEventListener('mouseenter', state.trackMouseenter, 0);
             state.el2.removeEventListener('scroll', state.scrollHandler, 0);
             state.el2.removeEventListener('wheel', state.scrollHandler, 0);
             window.removeEventListener('resize', state.windowResize, 0);
