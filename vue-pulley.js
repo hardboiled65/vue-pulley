@@ -364,6 +364,7 @@
                 state.dragger.style.visibility = 'hidden';
                 state.dragger.style.opacity = '0';
                 state.dragger.style.width = '11px';
+                state.trackZoomed = false;
             }
         }
 
@@ -501,6 +502,9 @@
         function trackMouseenter(el) {
             var state = getState(el);
             return function(event) {
+                if (state.trackZoomed) {
+                    return;
+                }
                 state.trackZoomed = true;
                 state.dragger.style.width = '15px';
 
