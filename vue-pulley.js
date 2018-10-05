@@ -53,6 +53,7 @@
 
                     el2Class: 'vb-content',
 
+                    trackClass: 'pulley-track',
                     draggerClass: 'vb-dragger',
                     draggerStylerClass: 'vb-dragger-styler',
                 },
@@ -64,6 +65,8 @@
                 el1: null,
                 el2: null,
                 dragger: null,
+                track: null,
+                draggerStyler: null,
 
                 // show dragger
                 draggerEnabled: null,
@@ -184,22 +187,23 @@
         function createDragger(el){
             var state = getState(el);
 
+            var track = document.createElement('div');
             var dragger = document.createElement('div');
             var draggerStyler = document.createElement('div');
 
+            state.track = track;
+            state.draggerStyler = draggerStyler;
+
+            track.className = state.config.trackClass;
+
             dragger.className = state.config.draggerClass;
 
-            dragger.style.position = 'absolute';
+            track.style.position = 'absolute';
+            track.style.height = '100%';
+            track.style.top = '0';
+            track.style.right = '0';
 
-            // Additional styles for dragger.
-            dragger.style.zIndex = '15';
-            dragger.style.width = '11px';
-            dragger.style.right = '0';
-            dragger.style.padding = '2px';
-            dragger.style.boxSizing = 'border-box';
-            dragger.style.opacity = '0';
-            dragger.style.visibility = 'hidden';
-            dragger.style.transition = 'opacity 200ms ease-out, visibility 300ms linear, width 100ms linear';
+            dragger.style.position = 'absolute';
 
             if (!state.draggerEnabled) {
                 dragger.style.display = 'none';
@@ -207,17 +211,9 @@
 
             draggerStyler.className = state.config.draggerStylerClass;
 
-            // Additional styles for dragger styler.
-            draggerStyler.style.backfaceVisibility = 'hidden';
-            draggerStyler.style.backgroundColor = 'rgba(0, 0, 0, .5)';
-            draggerStyler.style.margin = '0';
-            draggerStyler.style.borderRadius = '20px';
-            draggerStyler.style.display = 'block';
-            draggerStyler.style.width = '100%';
-            draggerStyler.style.height = '100%';
-
             dragger.appendChild(draggerStyler);
-            state.el1.appendChild(dragger);
+            track.appendChild(dragger);
+            state.el1.appendChild(track);
 
             return dragger;
         }
@@ -361,6 +357,10 @@
                 state.dragger.style.visibility = 'visible';
                 state.dragger.style.opacity = '1';
             } else {
+                state.track.style.visibility = 'hidden';
+                // state.track.style.opacity = '0';
+                state.track.style.border = '0';
+                state.track.style.backgroundColor = 'initial';
                 state.dragger.style.visibility = 'hidden';
                 state.dragger.style.opacity = '0';
                 state.dragger.style.width = '11px';
@@ -368,6 +368,42 @@
             }
         }
 
+
+        /*------------------------------------*\
+            Theme
+        \*------------------------------------*/
+        function setTheme(el, theme) {
+            var state = getState(el);
+            console.log(state);
+
+            //===========
+            // apple
+            //===========
+            // track
+            state.track.style.zIndex = '14';
+            state.track.style.width = '15px';
+            state.track.style.boxSizing = 'initial';
+            state.track.style.opacity = '1';
+            state.track.style.visibility = 'hidden';
+            state.track.transition = 'border 100ms linear, opacity 200ms ease-out, visibility 300ms linear';
+            // dragger
+            state.dragger.style.zIndex = '15';
+            state.dragger.style.width = '11px';
+            state.dragger.style.right = '0';
+            state.dragger.style.padding = '2px';
+            state.dragger.style.boxSizing = 'border-box';
+            state.dragger.style.opacity = '0';
+            state.dragger.style.visibility = 'hidden';
+            state.dragger.style.transition = 'opacity 200ms ease-out, visibility 300ms linear, width 100ms linear';
+            // dragger styler
+            state.draggerStyler.style.backfaceVisibility = 'hidden';
+            state.draggerStyler.style.backgroundColor = 'rgba(0, 0, 0, .5)';
+            state.draggerStyler.style.margin = '0';
+            state.draggerStyler.style.borderRadius = '20px';
+            state.draggerStyler.style.display = 'block';
+            state.draggerStyler.style.width = '100%';
+            state.draggerStyler.style.height = '100%';
+        }
 
 
         /*------------------------------------*\
@@ -506,6 +542,10 @@
                     return;
                 }
                 state.trackZoomed = true;
+                state.track.style.visibility = 'visible';
+                state.track.style.opacity = '1';
+                state.track.style.borderLeft = '1px solid #DDDDDD';
+                state.track.style.backgroundColor = '#FAFAFA';
                 state.dragger.style.width = '15px';
 
                 // reset phantom class
@@ -602,6 +642,9 @@
             state.el1 = el;
             state.el2 = el.firstElementChild;
             state.dragger = createDragger(el);
+
+            // set theme
+            setTheme(el, state.config.theme);
 
             // create and reference event listeners
             state.barMousedown = barMousedown(el);
