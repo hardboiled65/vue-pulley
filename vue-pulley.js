@@ -759,7 +759,8 @@
 
             // clear dragger
             state.dragger.removeChild(state.dragger.firstChild);
-            state.el1.removeChild(state.dragger);
+            state.track.removeChild(state.dragger);
+            state.el1.removeChild(state.track);
 
             // clear timeouts that may be still running
             state.scrollingPhantomClassTimeout ?
