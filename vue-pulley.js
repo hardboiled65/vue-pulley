@@ -385,7 +385,7 @@
             state.track.style.boxSizing = 'initial';
             state.track.style.opacity = '1';
             state.track.style.visibility = 'hidden';
-            state.track.transition = 'border 100ms linear, opacity 200ms ease-out, visibility 300ms linear';
+            state.track.style.transition = 'opacity 200ms ease-out, visibility 300ms linear';
             // dragger
             state.dragger.style.zIndex = '15';
             state.dragger.style.width = '11px';
