@@ -17,10 +17,10 @@
                 track: {
                     zIndex: '14',
                     width: '11px',
-                    boxSizing = 'initial',
-                    opacity = '1',
-                    visibility = 'hidden',
-                    transition = 'opacity 200ms ease-out, visibility 300ms linear'
+                    boxSizing: 'initial',
+                    opacity: '1',
+                    visibility: 'hidden',
+                    transition: 'opacity 200ms ease-out, visibility 300ms linear'
                 },
                 knob: {}
             }
