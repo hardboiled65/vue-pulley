@@ -16,11 +16,24 @@
             initialStyle: {
                 track: {
                     zIndex: '14',
-                    width: '11px',
                     boxSizing: 'initial',
+                    borderLeft: '1px solid #DDDDDD',
+                    backgroundColor: 'rgba(250, 250, 250, 0)',
+                    width: '10px',
                     opacity: '1',
                     visibility: 'hidden',
-                    transition: 'opacity 200ms ease-out, visibility 300ms linear'
+                    transition: 'opacity 200ms ease-out, visibility 300ms linear, width 200ms linear, background-color 200ms linear'
+                },
+                knob: {
+                    width: '100%',
+                    padding: '2px'
+                }
+            },
+            zoomedStyle: {
+                track: {
+                    width: '15px',
+                    backgroundColor: 'rgba(250, 250, 250, 1)',
+                    visibility: 'visible'
                 },
                 knob: {}
             }
@@ -376,16 +389,17 @@
             if (options.forceShow ||
                     (!hasClass(el, state.config.el1ScrollingPhantomClass) &&
                     !hasClass(el, state.config.el1DraggingPhantomClass))) {
+                state.track.style.opacity = '1';
                 state.dragger.style.visibility = 'visible';
                 state.dragger.style.opacity = '1';
             } else {
-                state.track.style.visibility = 'hidden';
-                // state.track.style.opacity = '0';
-                state.track.style.border = '0';
+                for (var key in theme[state.config.theme].initialStyle.track) {
+                    state.track.style[key] = theme[state.config.theme].initialStyle.track[key];
+                }
+                state.track.style.opacity = '0';
                 state.track.style.backgroundColor = 'initial';
                 state.dragger.style.visibility = 'hidden';
                 state.dragger.style.opacity = '0';
-                state.dragger.style.width = '11px';
                 state.trackZoomed = false;
             }
         }
@@ -394,25 +408,30 @@
         /*------------------------------------*\
             Theme
         \*------------------------------------*/
-        function setTheme(el, theme) {
+        function setTheme(el, themeName) {
             var state = getState(el);
-            console.log(state);
+
+            // set config
+            for (var key in theme[themeName].config) {
+                state.config[key] = theme[themeName][key];
+            }
+
+            // set initial track style
+            for (var key in theme[themeName].initialStyle.track) {
+                state.track.style[key] = theme[themeName].initialStyle.track[key];
+            }
+
+            // set initial knob style
+            for (var key in theme[themeName].initialStyle.knob) {
+                state.dragger.style[key] = theme[themeName].initialStyle.knob[key];
+            }
 
             //===========
             // apple
             //===========
-            // track
-            state.track.style.zIndex = '14';
-            state.track.style.width = '15px';
-            state.track.style.boxSizing = 'initial';
-            state.track.style.opacity = '1';
-            state.track.style.visibility = 'hidden';
-            state.track.style.transition = 'opacity 200ms ease-out, visibility 300ms linear';
             // dragger
             state.dragger.style.zIndex = '15';
-            state.dragger.style.width = '11px';
             state.dragger.style.right = '0';
-            state.dragger.style.padding = '2px';
             state.dragger.style.boxSizing = 'border-box';
             state.dragger.style.opacity = '0';
             state.dragger.style.visibility = 'hidden';
@@ -564,11 +583,10 @@
                     return;
                 }
                 state.trackZoomed = true;
-                state.track.style.visibility = 'visible';
+                for (var key in theme[state.config.theme].zoomedStyle.track) {
+                    state.track.style[key] = theme[state.config.theme].zoomedStyle.track[key];
+                }
                 state.track.style.opacity = '1';
-                state.track.style.borderLeft = '1px solid #DDDDDD';
-                state.track.style.backgroundColor = '#FAFAFA';
-                state.dragger.style.width = '15px';
 
                 // reset phantom class
                 state.scrollingPhantomClassTimeout ?
