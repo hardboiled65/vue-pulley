@@ -18,7 +18,7 @@
                     zIndex: '14',
                     boxSizing: 'initial',
                     borderLeft: '1px solid #DDDDDD',
-                    backgroundColor: 'rgba(250, 250, 250, 0)',
+                    backgroundColor: 'rgba(246, 245, 246, 0)',
                     width: '10px',
                     opacity: '1',
                     visibility: 'hidden',
@@ -32,7 +32,7 @@
             zoomedStyle: {
                 track: {
                     width: '15px',
-                    backgroundColor: 'rgba(250, 250, 250, 1)',
+                    backgroundColor: 'rgba(246, 245, 246, 0.8)',
                     visibility: 'visible'
                 },
                 knob: {}
