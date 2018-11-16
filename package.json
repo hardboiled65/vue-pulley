@@ -3,7 +3,7 @@
   "description": "Vue 2 directive for custom scrollbar that mimics macOS scrollbar. Forked from [Vuebar](https://github.com/DominikSerafin/vuebar)",
   "author": "Dominik Serafin <dominikdsgnr@gmail.com>",
   "license": "MIT",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "private": false,
   "repository": {
     "type": "git",
