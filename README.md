@@ -3,6 +3,17 @@
 Vue 2 directive for custom scrollbar that mimics macOS scrollbar.
 Forked from [Vuebar](https://github.com/DominikSerafin/vuebar)
 
+## Installation
+```sh
+$ npm install vue-pulley
+```
+
+## Usage
+```js
+import VuePulley from 'vue-pulley'
+Vue.use(VuePulley)
+```
+
 
 ## Original Author
 [@DominikSerafin](https://github.com/DominikSerafin)
