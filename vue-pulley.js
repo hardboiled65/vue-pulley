@@ -46,7 +46,6 @@
         Vuebar
     \*------------------------------------*/
     var VuePulley = {};
-    _VuePulley = VuePulley;
     VuePulley.install = function(Vue, installOptions){
 
 
